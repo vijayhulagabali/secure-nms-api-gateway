@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NMS Secure API Gateway</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 22px 40px;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        header p {
+            margin-top: 6px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .online {
+            color: #16a34a;
+        }
+
+        .secure {
+            color: #2563eb;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            font-size: 19px;
+            margin-bottom: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 14px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-up {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-down {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 25px;
+            color: #6b7280;
+        }
+
+        .error {
+            color: #dc2626;
+            padding: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+            padding: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Secure API Gateway for NMS Northbound Interfaces</h1>
+    <p>Network Management System · Secure API Monitoring Dashboard</p>
+</header>
+
+<div class="container">
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-title">API Gateway</div>
+            <div class="card-value online">● ONLINE</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">HTTPS / TLS</div>
+            <div class="card-value secure">● ENABLED</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Authentication</div>
+            <div class="card-value secure">OAuth2 / JWT</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Rate Limit</div>
+            <div class="card-value">10 / min</div>
+        </div>
+
+    </div>
+
+    <div class="section">
+        <h2>NMS Devices</h2>
+
+        <div id="loading" class="loading">
+            Loading devices...
+        </div>
+
+        <div id="error" class="error" style="display:none;"></div>
+
+        <table id="deviceTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Device Name</th>
+                    <th>IP Address</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="deviceBody"></tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Security Controls</h2>
+
+        <table>
+            <tbody>
+                <tr>
+                    <td>Transport Security</td>
+                    <td class="secure">HTTPS / TLS</td>
+                </tr>
+
+                <tr>
+                    <td>Authentication</td>
+                    <td class="secure">OAuth2 Client Credentials + JWT</td>
+                </tr>
+
+                <tr>
+                    <td>API Gateway</td>
+                    <td class="secure">Kong</td>
+                </tr>
+
+                <tr>
+                    <td>Rate Limiting</td>
+                    <td class="secure">10 requests / minute</td>
+                </tr>
+
+                <tr>
+                    <td>Backend Protection</td>
+                    <td class="secure">Port 8080 restricted</td>
+                </tr>
+
+                <tr>
+                    <td>Database</td>
+                    <td class="secure">PostgreSQL</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer>
+    Secure NMS Northbound Interface · API Gateway Prototype
+</footer>
+
+<script>
+    async function loadDevices() {
+
+        const loading = document.getElementById("loading");
+        const error = document.getElementById("error");
+        const table = document.getElementById("deviceTable");
+        const body = document.getElementById("deviceBody");
+
+        try {
+
+            const response = await fetch("/dashboard/api/devices");
+
+            if (!response.ok) {
+                throw new Error(
+                    "API request failed with HTTP " + response.status
+                );
+            }
+
+            const devices = await response.json();
+
+            body.innerHTML = "";
+
+            devices.forEach(device => {
+
+                const row = document.createElement("tr");
+
+                const statusClass =
+                    device.status === "UP"
+                        ? "status status-up"
+                        : "status status-down";
+
+                row.innerHTML = `
+                    <td>${device.id}</td>
+                    <td>${device.name}</td>
+                    <td>${device.ipAddress}</td>
+                    <td>${device.type}</td>
+                    <td>
+                        <span class="${statusClass}">
+                            ${device.status}
+                        </span>
+                    </td>
+                `;
+
+                body.appendChild(row);
+            });
+
+            loading.style.display = "none";
+            table.style.display = "table";
+
+        } catch (err) {
+
+            loading.style.display = "none";
+            error.style.display = "block";
+
+            error.textContent =
+                "Unable to load device data: " + err.message;
+        }
+    }
+
+    loadDevices();
+</script>
+
+</body>
+</html>
